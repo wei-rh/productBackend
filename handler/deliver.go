@@ -56,3 +56,24 @@ func GetDeliverOrder(ctx *gin.Context){
 		"error":"",
 	})
 }
+
+//查询订单,通过id查询一个订单
+func FindDeliverOrder(ctx *gin.Context)  {
+	id := ctx.Query("id")
+	if id=="" {
+		ctx.JSON(http.StatusOK,gin.H{
+			"error":"id is null",
+		})
+	}
+	deliverorder := []model.DeliverOrder{}
+	DB.Where("id = ?", id).Find(&deliverorder)
+	for i, _ := range deliverorder {
+		//关联查询
+		DB.Model(&deliverorder[i]).
+			Related(&deliverorder[i].DeliverServer)
+	}
+	ctx.JSON(http.StatusOK,gin.H{
+		"order": deliverorder,
+		"error":"",
+	})
+}

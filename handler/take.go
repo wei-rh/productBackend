@@ -57,4 +57,25 @@ func GetTakeOrder(ctx *gin.Context){
 		"error":"",
 	})
 
+
+}
+
+//查询订单,通过id查询一个订单
+func FindTakeOrder(ctx *gin.Context)  {
+	 id := ctx.Query("id")
+	 if id=="" {
+		ctx.JSON(http.StatusOK,gin.H{
+			"error":"id is null",
+		})
+	}
+	takeorder := []model.TakeOrder{}
+	DB.Where("id = ?", id).Find(&takeorder)
+	for i, _ := range takeorder {
+		//关联查询
+		DB.Model(&takeorder[i]).Related(&takeorder[i].TakeServer)
+	}
+	ctx.JSON(http.StatusOK,gin.H{
+		"order": takeorder,
+		"error":"",
+	})
 }

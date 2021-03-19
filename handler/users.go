@@ -6,6 +6,7 @@ import (
 	"productBackend/model"
 )
 
+//获取用户所有类型的订单
 func GetAllOrder(ctx *gin.Context){
 	uidVal, ok := ctx.Get("uid")
 	if !ok {

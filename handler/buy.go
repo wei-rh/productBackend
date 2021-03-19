@@ -56,3 +56,23 @@ func BuyTakeOrder(ctx *gin.Context){
 	})
 }
 
+//查询订单,通过id查询一个订单
+func FindBuyOrder(ctx *gin.Context)  {
+	id := ctx.Query("id")
+	if id=="" {
+		ctx.JSON(http.StatusOK,gin.H{
+			"error":"id is null",
+		})
+	}
+	buyorder := []model.BuyOrder{}
+	DB.Where("id = ?", id).Find(&buyorder)
+	for i, _ := range buyorder {
+		//关联查询
+		DB.Model(&buyorder[i]).
+			Related(&buyorder[i].BuyServer)
+	}
+	ctx.JSON(http.StatusOK,gin.H{
+		"order": buyorder,
+		"error":"",
+	})
+}

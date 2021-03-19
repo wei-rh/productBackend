@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 	"log"
@@ -19,6 +20,9 @@ func main() {
 		log.Fatal(err)
 	}
 	defer db.Close()
+	takeorder := []model.TakeOrder{}
+	model.DB.Find(&takeorder)
+	fmt.Println(takeorder[0].Model.CreatedAt)
 	//初始化路由的信息
 	r := router.RouterInit()
 	r.Run(config.App.ServiceAddr)

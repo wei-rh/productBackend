@@ -1,10 +1,17 @@
 package main
 
 import (
+	"fmt"
 	"productBackend/model"
 )
 
 func main() {
+
+	takeorder := []model.TakeOrder{}
+	model.DB.Find(&takeorder)
+	fmt.Println(takeorder)
+
+
 	//url := "https://api.weixin.qq.com/sns/jscode2session?appid=wx8af0d5c69a1b6179&secret=cf65449b3616ccc19f1aba150eb0bffb&js_code=071r5a0003hfeL127B000SlWQC3r5a0X&grant_type=authorization_code"
 	//code := "071r5a0003hfeL127B000SlWQC3r5a0X"
 	//合成url, 这里的appId和secret是在微信公众平台上获取的
@@ -20,9 +27,9 @@ func main() {
 	//	return
 	//}
 	//fmt.Println(wxResp)
-	openid := "oaNGa5W3Lpd5Y33lIiNJgRW67tWc"
-	user := &model.User{}
-	model.DB.Where("openid = ?",openid).Find(&user)
+	//openid := "oaNGa5W3Lpd5Y33lIiNJgRW67tWc"
+	//user := &model.User{}
+	//model.DB.Where("openid = ?",openid).Find(&user)
 	//fmt.Println(user)
 	//配置读取
 	//config.InitConf()
