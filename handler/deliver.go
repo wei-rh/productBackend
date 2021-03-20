@@ -13,6 +13,7 @@ func GetDeliverOrder(ctx *gin.Context){
 		ctx.JSON(http.StatusOK,gin.H{
 			"error": ok,
 		})
+		return
 	}
 	uid := uidVal.(int)
 	//接收参数
@@ -21,6 +22,7 @@ func GetDeliverOrder(ctx *gin.Context){
 		ctx.JSON(http.StatusOK,gin.H{
 			"error": err.Error(),
 		})
+		return
 	}
 	//
 	deliverserver := &model.DeliverServer{}
@@ -43,6 +45,7 @@ func GetDeliverOrder(ctx *gin.Context){
 	deliverorder.Time=data.Time
 	deliverorder.Weight=data.Weight
 	deliverorder.DeliverServerID= int(deliverserver.ID)
+	deliverorder.DeliverServer=*deliverserver
 	if err := DB.Create(&deliverorder).Error; err != nil {
 		ctx.JSON(http.StatusOK, gin.H{
 			"error": err.Error(),
@@ -52,7 +55,7 @@ func GetDeliverOrder(ctx *gin.Context){
 
 	ctx.JSON(http.StatusOK,gin.H{
 		"deliverorder": deliverorder,
-		"deliverserver": deliverserver,
+		"deliverserverbyuser": deliverserver,
 		"error":"",
 	})
 }
@@ -64,6 +67,7 @@ func FindDeliverOrder(ctx *gin.Context)  {
 		ctx.JSON(http.StatusOK,gin.H{
 			"error":"id is null",
 		})
+		return
 	}
 	deliverorder := []model.DeliverOrder{}
 	DB.Where("id = ?", id).Find(&deliverorder)
@@ -76,4 +80,14 @@ func FindDeliverOrder(ctx *gin.Context)  {
 		"order": deliverorder,
 		"error":"",
 	})
+}
+//获取所有订单
+func AllDeliverOrder() []model.DeliverOrder {
+	deliverorder := []model.DeliverOrder{}
+	DB.Find(&deliverorder)
+	for i, _ := range deliverorder {
+		//关联查询
+		DB.Model(&deliverorder[i]).Related(&deliverorder[i].DeliverServer)
+	}
+	return deliverorder
 }

@@ -13,6 +13,7 @@ func BuyTakeOrder(ctx *gin.Context){
 		ctx.JSON(http.StatusOK,gin.H{
 			"error": ok,
 		})
+		return
 	}
 	uid := uidVal.(int)
 	//接收参数
@@ -21,9 +22,10 @@ func BuyTakeOrder(ctx *gin.Context){
 		ctx.JSON(http.StatusOK,gin.H{
 			"error": err.Error(),
 		})
+		return
 	}
 	//
-	buyserver := &model.BuyServer{}
+	buyserver := model.BuyServer{}
 	buyserver.Userid=uid
 	buyserver.Status=0
 	if err := DB.Create(&buyserver).Error; err != nil {
@@ -42,6 +44,7 @@ func BuyTakeOrder(ctx *gin.Context){
 	buyorder.Remarks=data.Remarks
 	buyorder.Time=data.Time
 	buyorder.BuyServerID= int(buyserver.ID)
+	buyorder.BuyServer = buyserver
 	if err := DB.Create(&buyorder).Error; err != nil {
 		ctx.JSON(http.StatusOK, gin.H{
 			"error": err.Error(),
@@ -51,7 +54,7 @@ func BuyTakeOrder(ctx *gin.Context){
 
 	ctx.JSON(http.StatusOK,gin.H{
 		"buyorder": buyorder,
-		"buyserver": buyserver,
+		"buyserverbyuser": buyserver,
 		"error":"",
 	})
 }
@@ -63,6 +66,7 @@ func FindBuyOrder(ctx *gin.Context)  {
 		ctx.JSON(http.StatusOK,gin.H{
 			"error":"id is null",
 		})
+		return
 	}
 	buyorder := []model.BuyOrder{}
 	DB.Where("id = ?", id).Find(&buyorder)
@@ -75,4 +79,14 @@ func FindBuyOrder(ctx *gin.Context)  {
 		"order": buyorder,
 		"error":"",
 	})
+}
+//获取所有订单
+func AllBuyOrder() []model.BuyOrder {
+	buyorder := []model.BuyOrder{}
+	DB.Find(&buyorder)
+	for i, _ := range buyorder {
+		//关联查询
+		DB.Model(&buyorder[i]).Related(&buyorder[i].BuyServer)
+	}
+	return buyorder
 }

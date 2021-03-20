@@ -13,6 +13,7 @@ func GetTakeOrder(ctx *gin.Context){
 		ctx.JSON(http.StatusOK,gin.H{
 			"error": ok,
 		})
+		return
 	}
 	uid := uidVal.(int)
 	//接收参数
@@ -21,6 +22,7 @@ func GetTakeOrder(ctx *gin.Context){
 		ctx.JSON(http.StatusOK,gin.H{
 			"error": err.Error(),
 		})
+		return
 	}
 	takeserver := &model.TakeServer{}
 	takeserver.Userid=uid
@@ -49,11 +51,13 @@ func GetTakeOrder(ctx *gin.Context){
 		})
 		return
 	}
-	//
+	//关联查询
+	DB.Model(&takeorder).Related(&takeorder.TakeServer)
+
 
 	ctx.JSON(http.StatusOK,gin.H{
 		"takeorder": takeorder,
-		"takeserver": takeserver,
+		"takeserverbyuser": takeserver,
 		"error":"",
 	})
 
@@ -67,6 +71,7 @@ func FindTakeOrder(ctx *gin.Context)  {
 		ctx.JSON(http.StatusOK,gin.H{
 			"error":"id is null",
 		})
+		 return
 	}
 	takeorder := []model.TakeOrder{}
 	DB.Where("id = ?", id).Find(&takeorder)
@@ -79,3 +84,17 @@ func FindTakeOrder(ctx *gin.Context)  {
 		"error":"",
 	})
 }
+
+//获取所有订单
+
+func AllTakeOrder() []model.TakeOrder {
+	takeorder := []model.TakeOrder{}
+	DB.Find(&takeorder)
+	for i, _ := range takeorder {
+		//关联查询
+		DB.Model(&takeorder[i]).Related(&takeorder[i].TakeServer)
+	}
+	return takeorder
+}
+
+

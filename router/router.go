@@ -35,6 +35,10 @@ func RouterInit()  *gin.Engine {
 		authGroup.POST("/buyorder",handler.BuyTakeOrder)
 		//获取用户所有订单
 		authGroup.GET("/allorder",handler.GetAllOrder)
+		//骑手注册
+		authGroup.GET("/register",handler.Register)
+		//获取用户有没有骑手权限
+		authGroup.GET("/serverexist",handler.ByFindServer)
 	}
 	//获取用户-取 订单-的某一个
 	r.GET("/onetakeorder",handler.FindTakeOrder)
@@ -42,7 +46,15 @@ func RouterInit()  *gin.Engine {
 	r.GET("/onebuyorder",handler.FindBuyOrder)
 	//获取用户-送订单-的某一个
 	r.GET("/onedeliverorder",handler.FindDeliverOrder)
-	//获取一个server的信息
+	//获取一个server 跑腿的信息， 传入一个serverid
 	r.GET("/getserver",handler.FindServer)
+	//模拟支付接口
+	r.GET("/statusone",handler.SetStatusOne)
+	//删除订单接口
+	r.GET("/deleteorder",handler.DeleteOrder)
+	//取消订单接口
+	r.GET("/cancelorder",handler.CancelOrder)
+	//骑手获取所有可接订单
+	r.GET("/allstatusone",handler.GetAllStatusOne)
 	return r
 }

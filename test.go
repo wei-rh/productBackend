@@ -2,14 +2,19 @@ package main
 
 import (
 	"fmt"
-	"productBackend/model"
+	"productBackend/handler"
 )
 
 func main() {
 
-	takeorder := []model.TakeOrder{}
-	model.DB.Find(&takeorder)
-	fmt.Println(takeorder)
+	//takeorder := []model.TakeOrder{}
+	//model.DB.Find(&takeorder)
+	//fmt.Println(takeorder)
+
+	 a :=handler.AllTakeOrder()
+	for i := 0; i < len(a); i++ {
+		fmt.Println(a[i])
+	}
 
 
 	//url := "https://api.weixin.qq.com/sns/jscode2session?appid=wx8af0d5c69a1b6179&secret=cf65449b3616ccc19f1aba150eb0bffb&js_code=071r5a0003hfeL127B000SlWQC3r5a0X&grant_type=authorization_code"
