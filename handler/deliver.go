@@ -53,6 +53,14 @@ func GetDeliverOrder(ctx *gin.Context){
 		return
 	}
 
+	//更新 deliverserver 表
+	deliverserver.Deliverid = int(deliverorder.ID)
+	if error := DB.Save(&deliverserver).Error;error!=nil {
+		ctx.JSON(http.StatusOK, gin.H{
+			"error": error.Error(),
+		})
+		return
+	}
 	ctx.JSON(http.StatusOK,gin.H{
 		"deliverorder": deliverorder,
 		"deliverserverbyuser": deliverserver,
@@ -80,14 +88,4 @@ func FindDeliverOrder(ctx *gin.Context)  {
 		"order": deliverorder,
 		"error":"",
 	})
-}
-//获取所有订单
-func AllDeliverOrder() []model.DeliverOrder {
-	deliverorder := []model.DeliverOrder{}
-	DB.Find(&deliverorder)
-	for i, _ := range deliverorder {
-		//关联查询
-		DB.Model(&deliverorder[i]).Related(&deliverorder[i].DeliverServer)
-	}
-	return deliverorder
 }

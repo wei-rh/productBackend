@@ -75,6 +75,7 @@ func SetStatusOne(ctx *gin.Context)  {
 			})
 			return
 		}
+		break
 	case "buy":
 		buyServerByUser := &model.BuyServer{}
 		buyServerByUser.ID = uint(ID)
@@ -84,6 +85,7 @@ func SetStatusOne(ctx *gin.Context)  {
 			})
 			return
 		}
+		break
 	case "deliver":
 		deliverServerByUser := &model.DeliverServer{}
 		deliverServerByUser.ID = uint(ID)
@@ -93,6 +95,7 @@ func SetStatusOne(ctx *gin.Context)  {
 			})
 			return
 		}
+		break
 	default:
 
 	}
@@ -193,6 +196,7 @@ func DeleteOrder(ctx *gin.Context) {
 			})
 			return
 		}
+		break
 	case "buy":
 		buyorder := &model.BuyOrder{}
 		buyorder.ID = uint(ID)
@@ -204,6 +208,7 @@ func DeleteOrder(ctx *gin.Context) {
 			})
 			return
 		}
+		break
 	case "deliver":
 		deliverorder := &model.DeliverOrder{}
 		deliverorder.ID = uint(ID)
@@ -213,6 +218,7 @@ func DeleteOrder(ctx *gin.Context) {
 			})
 			return
 		}
+		break
 	default:
 
 	}

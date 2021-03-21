@@ -51,6 +51,16 @@ func BuyTakeOrder(ctx *gin.Context){
 		})
 		return
 	}
+	//更新 buyserver 表
+	buyserver.Buyid = int(buyorder.ID)
+	if error := DB.Save(&buyserver).Error;error!=nil {
+		ctx.JSON(http.StatusOK, gin.H{
+			"error": error.Error(),
+		})
+		return
+	}
+
+
 
 	ctx.JSON(http.StatusOK,gin.H{
 		"buyorder": buyorder,
@@ -79,14 +89,4 @@ func FindBuyOrder(ctx *gin.Context)  {
 		"order": buyorder,
 		"error":"",
 	})
-}
-//获取所有订单
-func AllBuyOrder() []model.BuyOrder {
-	buyorder := []model.BuyOrder{}
-	DB.Find(&buyorder)
-	for i, _ := range buyorder {
-		//关联查询
-		DB.Model(&buyorder[i]).Related(&buyorder[i].BuyServer)
-	}
-	return buyorder
 }

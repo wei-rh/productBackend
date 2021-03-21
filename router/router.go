@@ -39,6 +39,12 @@ func RouterInit()  *gin.Engine {
 		authGroup.GET("/register",handler.Register)
 		//获取用户有没有骑手权限
 		authGroup.GET("/serverexist",handler.ByFindServer)
+		//骑手接单或者确认订单接口
+		authGroup.GET("/orderreceiving",handler.OrderReceiving)
+		//骑手获取已接订单，派送中。。。
+		authGroup.GET("/allstatustwo",handler.GetServerStatusTwo)
+		//骑手获取已完成订单，已完成。。。
+		authGroup.GET("/allstatusthree",handler.GetServerStatusThree)
 	}
 	//获取用户-取 订单-的某一个
 	r.GET("/onetakeorder",handler.FindTakeOrder)
@@ -56,5 +62,6 @@ func RouterInit()  *gin.Engine {
 	r.GET("/cancelorder",handler.CancelOrder)
 	//骑手获取所有可接订单
 	r.GET("/allstatusone",handler.GetAllStatusOne)
+
 	return r
 }
